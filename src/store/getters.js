@@ -1,4 +1,4 @@
-const getters = {
+const getters = { //相当于state的计算属性
   sidebar: state => state.app.sidebar,
   language: state => state.app.language,
   visitedViews: state => state.tagsView.visitedViews,

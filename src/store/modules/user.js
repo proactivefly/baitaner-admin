@@ -43,14 +43,14 @@ const user = {
     }
   },
 
-  actions: { //通过操作mutations 简介操作state,优点是可异步操作，第一个参数为context对象
+  actions: { //通过操作mutations 间接操作state,优点是可异步操作，第一个参数为context对象
     // 登录
     Login(context, userInfo) {
       let username = userInfo.username.trim();
       let password = userInfo.password.trim();
       return new Promise((resolve, reject) => {
         login(username, password).then(response => {
-          let data = response.data
+          let data=response.data
           //登陆成功之后把服务器token通过分发  SET_TOKEN事件 写到store中
           context.commit('SET_TOKEN', data.token)
           // 写到cookie中
@@ -63,17 +63,17 @@ const user = {
     },
 
     // 获取用户信息
-    GetUserInfo({ commit, state }) {
+    GetUserInfo(context) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
+        getUserInfo(context.state.token).then(response => {
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
           }
           const data = response.data
-          commit('SET_ROLES', data.roles)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
+          context.commit('SET_ROLES', data.roles) //设置更新state.roles角色
+          context.commit('SET_NAME', data.name)
+          context.commit('SET_AVATAR', data.avatar)
+          context.commit('SET_INTRODUCTION', data.introduction) //设置介绍
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -105,7 +105,7 @@ const user = {
       })
     },
 
-    // 动态修改权限
+    // 动态修改权限 (需求中不可切换角色 时 可删除)
     ChangeRoles({ commit }, role) {
       return new Promise(resolve => {
         commit('SET_TOKEN', role)

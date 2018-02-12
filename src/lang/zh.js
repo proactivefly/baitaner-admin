@@ -46,10 +46,6 @@ export default {
     password: '密码',
     switchLang:'切换语言成功'
   },
-  documentation: {
-    documentation: '文档',
-    github: 'Github 地址'
-  },
   permission: {
     roles: '你的权限',
     switchRoles: '切换权限'

@@ -1,6 +1,4 @@
 'use strict'
-// Template version: 1.2.6
-// see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
 
@@ -10,6 +8,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    //代理
     proxyTable: {},
 
     // Various Dev Server settings

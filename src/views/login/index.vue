@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <!-- 表单组件 -->
-    <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
+    <el-form class="login-form" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <!-- 标题 -->
       <div class="title-container">
         <h3 class="title">{{$t('login.title')}}</h3>
@@ -13,7 +13,7 @@
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" :placeholder="$t('login.username')" />
+        <el-input name="username" type="text" v-model="loginForm.username"  :placeholder="$t('login.username')" />
       </el-form-item>
       <!-- 密码 -->
       <el-form-item prop="password">

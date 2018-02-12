@@ -17,9 +17,16 @@ const userMap = {
   }
 }
 
+
+/*config:{
+  body:"{"username":"admin","password":"111111"}"
+  type:"POST"
+  url:"https://api-dev/login/login"
+}
+*/
 export default {
   Login: config => {
-    const { username } = JSON.parse(config.body)
+    const { username } = JSON.parse(config.body);
     return userMap[username]
   },
   getUserInfo: config => {
