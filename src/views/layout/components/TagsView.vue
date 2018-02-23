@@ -114,7 +114,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/stylus" lang="stylus" scoped>
 .tags-view-container {
   .tags-view-wrapper {
     background: #fff;
@@ -177,7 +177,7 @@ export default {
 }
 </style>
 
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/stylus" lang="stylus">
 //reset element css of el-icon-close
 .tags-view-wrapper {
   .tags-view-item {

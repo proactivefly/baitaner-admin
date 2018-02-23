@@ -15,8 +15,8 @@ function hasPermission(roles, route) {
 
 /**
  * 递归过滤异步路由表，返回符合用户角色权限的路由表
- * @param asyncRouterMap
- * @param roles
+ * @param asyncRouterMap   异步路由表
+ * @param roles 角色权限数组
  */
 function filterAsyncRouter(asyncRouterMap, roles) {
   const accessedRouters = asyncRouterMap.filter(route => {
@@ -28,13 +28,14 @@ function filterAsyncRouter(asyncRouterMap, roles) {
     }
     return false
   })
-  return accessedRouters// 返回可进入的路由数组
+  //返回可进入的路由数组
+  return accessedRouters  
 }
 
 const permission = { //定义权限state
   state: {
-    routers: constantRouterMap, //基础路由图谱
-    addRouters: [] //动态路由图谱
+    routers: constantRouterMap, //基础路由表
+    addRouters: [] //待添加路由表
   },
   mutations: {
     SET_ROUTERS: (state, routers) => { //设置路由
@@ -47,7 +48,7 @@ const permission = { //定义权限state
   actions: {
     GenerateRoutes({ commit }, data) { //
       return new Promise(resolve => {
-        const { roles } = data
+        const {roles} = data //data结构{roles:['admin']}
         let accessedRouters
         if (roles.indexOf('admin') >= 0) { //如果角色包含 管理员  ，拥有全部权限 无需过滤
           accessedRouters = asyncRouterMap 

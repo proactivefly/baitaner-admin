@@ -1,6 +1,7 @@
 export default {
   route: {
     dashboard: 'Dashboard',
+    system:'Management',
     introduction: 'Introduction',
     documentation: 'Documentation',
     permission: 'Permission',
@@ -60,7 +61,9 @@ export default {
     logIn: 'Log in',
     username: 'Username',
     password: 'Password',
-    switchLang:''
+    switchLang:'switch language success',
+    usernameTip:'用户名不能为空',
+    passwordTip:'请输入密码'
   },
   permission: {
     roles: 'Your roles',

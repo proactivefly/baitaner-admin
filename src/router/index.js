@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// 解决build后keep-live不生效
+// 解决build后keep-live不生效,路由懒加载
 const _import = require('./_import_' + process.env.NODE_ENV)
 
 Vue.use(Router)
@@ -40,7 +40,17 @@ export const constantRouterMap = [
       name: 'dashboard',
       meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
     }]
+  },
+  {
+  path: '/charts',
+  component: Layout,
+  redirect: 'noredirect',
+  name: 'excel',
+  meta: {
+    title: 'excel',
+    icon: 'excel'
   }
+}
 ]
 
 export default new Router({
@@ -53,18 +63,31 @@ export const asyncRouterMap = [
   {
     path: '/permission',
     component: Layout,
-    redirect: '/permission/index',
-    meta: { roles: ['admin'] }, // you can set roles in root nav
-    children: [{
-      path: 'index',
-      component: _import('permission/index'),
-      name: 'permission',
-      meta: {
-        title: 'permission',
-        icon: 'lock',
-        roles: ['admin'] // or you can only set roles in sub nav
-      }
-    }]
+    redirect: 'noredirect',
+    name:'system',
+    meta:{ 
+      title:'system',
+      icon:'user',
+      roles: ['admin']
+    }, 
+    children: [
+    {path: 'auth-management ',component: _import('permission/AuthManagement'),name: 'permission',meta: {title: 'authManagement',icon: 'lock',roles: ['admin']}},
+    // {path:'set',commont:_import('permission/SetPermission'),name:'set',meta:{title:"set",icon:'lock',roles:['admin']}}
+    ]
+  },
+  {
+    path: '/charts',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'charts',
+    meta: {
+      title: 'charts',
+      icon: 'chart'
+    },
+    children: [
+      { path: 'line', component: _import('charts/line'), name: 'lineChart', meta: { title: 'lineChart', noCache: true }},
+      { path: 'mixchart', component: _import('charts/mixChart'), name: 'mixChart', meta: { title: 'mixChart', noCache: true }}
+    ]
   },
   {
     path: '/components',
@@ -76,24 +99,17 @@ export const asyncRouterMap = [
       icon: 'component'
     },
     children: [
-      // { path: 'tinymce', component: _import('components-demo/tinymce'), name: 'tinymce-demo', meta: { title: 'tinymce' }},
-      // { path: 'markdown', component: _import('components-demo/markdown'), name: 'markdown-demo', meta: { title: 'markdown' }},
-      // { path: 'json-editor', component: _import('components-demo/jsonEditor'), name: 'jsonEditor-demo', meta: { title: 'jsonEditor' }},
-      // { path: 'dnd-list', component: _import('components-demo/dndList'), name: 'dndList-demo', meta: { title: 'dndList' }},
-      // { path: 'splitpane', component: _import('components-demo/splitpane'), name: 'splitpane-demo', meta: { title: 'splitPane' }},
       { path: 'avatar-upload', component: _import('components-demo/avatarUpload'), name: 'avatarUpload-demo', meta: { title: 'avatarUpload' }},
-      // { path: 'dropzone', component: _import('components-demo/dropzone'), name: 'dropzone-demo', meta: { title: 'dropzone' }},
-      // { path: 'sticky', component: _import('components-demo/sticky'), name: 'sticky-demo', meta: { title: 'sticky' }},
-      // { path: 'count-to', component: _import('components-demo/countTo'), name: 'countTo-demo', meta: { title: 'countTo' }},
+      { path: 'sticky', component: _import('components-demo/sticky'), name: 'sticky-demo', meta: { title: 'sticky' }},
       { path: 'mixin', component: _import('components-demo/mixin'), name: 'componentMixin-demo', meta: { title: 'componentMixin' }},
-      // { path: 'back-to-top', component: _import('components-demo/backToTop'), name: 'backToTop-demo', meta: { title: 'backToTop' }}
+      { path: 'back-to-top', component: _import('components-demo/backToTop'), name: 'backToTop-demo', meta: { title: 'backToTop' }}
     ]
   },
 
   {
     path: '/example',
     component: Layout,
-    redirect: '/example/table/complex-table',
+    redirect: 'noredirect',
     name: 'example',
     meta: {
       title: 'example',
@@ -110,9 +126,11 @@ export const asyncRouterMap = [
           icon: 'table'
         },
         children: [
-          { path: 'complex-table', component: _import('example/table/complexTable'), name: 'complexTable', meta: { title: 'complexTable' }}
+          { path: 'complex-table', component: _import('example/table/complexTable'), name: 'complexTable', meta: { title: 'complexTable' }},
+          { path: 'tree-table', component: _import('example/table/treeTable/treeTable'), name: 'treeTableDemo', meta: { title: 'treeTable' }},
         ]
-      }
+      },
+      { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'tab', meta: { title: 'tab' }}
     ]
   },
   { path: '*', redirect: '/404', hidden: true }

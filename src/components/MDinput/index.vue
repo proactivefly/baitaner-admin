@@ -115,28 +115,28 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/stylus" lang="stylus" scoped>
   // Fonts:
-  $font-size-base: 16px;
-  $font-size-small: 18px;
-  $font-size-smallest: 12px;
-  $font-weight-normal: normal;
-  $font-weight-bold: bold;
-  $apixel: 1px;
+  $font-size-base: 16px
+  $font-size-small: 18px
+  $font-size-smallest: 12px
+  $font-weight-normal: normal
+  $font-weight-bold: bold
+  $apixel: 1px
   // Utils
-  $spacer: 12px;
-  $transition: 0.2s ease all;
-  $index: 0px;
-  $index-has-icon: 30px;
+  $spacer: 12px
+  $transition: 0.2s ease all
+  $index: 0px
+  $index-has-icon: 30px
   // Theme:
-  $color-white: white;
-  $color-grey: #9E9E9E;
-  $color-grey-light: #E0E0E0;
-  $color-blue: #2196F3;
-  $color-red: #F44336;
-  $color-black: black;
+  $color-white: white
+  $color-grey: #9E9E9E
+  $color-grey-light: #E0E0E0
+  $color-blue: #2196F3
+  $color-red: #F44336
+  $color-black: black
   // Base clases:
-  %base-bar-pseudo {
+  base-bar-pseudo(){
     content: '';
     height: 1px;
     width: 0;
@@ -146,8 +146,8 @@ export default {
   }
 
   // Mixins:
-  @mixin slided-top() {
-    top: - ($font-size-base + $spacer);
+  slided-top() {
+    top: - 28px;
     left: 0;
     font-size: $font-size-base;
     font-weight: $font-weight-bold;
@@ -182,7 +182,7 @@ export default {
     }
     .material-input {
       font-size: $font-size-base;
-      padding: $spacer $spacer $spacer - $apixel * 10 $spacer / 2;
+      padding: $spacer $spacer 2px $spacer/2;
       display: block;
       width: 100%;
       border: none;
@@ -208,11 +208,11 @@ export default {
       display: block;
       width: 100%;
       &:before {
-        @extend %base-bar-pseudo;
+        base-bar-pseudo();
         left: 50%;
       }
       &:after {
-        @extend %base-bar-pseudo;
+        base-bar-pseudo();
         right: 50%;
       }
     }
@@ -225,7 +225,7 @@ export default {
     // Raised state:
     &.material--raised {
       .material-label {
-        @include slided-top();
+        slided-top();
       }
     }
     // Active state:

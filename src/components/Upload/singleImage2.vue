@@ -64,7 +64,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/stylus" lang="stylus" scoped>
 .upload-container {
 	width: 100%;
 	height: 100%;

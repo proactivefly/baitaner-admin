@@ -19,10 +19,10 @@ export default {
   },
   methods: {
     handleSetLanguage(lang) {
-      this.$i18n.locale = lang
-      this.$store.dispatch('setLanguage', lang)
+      this.$i18n.locale = lang //切换语言
+      this.$store.dispatch('setLanguage', lang) //保存到cookie中和store中
       this.$message({
-        message:'switch language success',
+        message:this.$t('common.switchLang'),
         type: 'success'
       })
     }

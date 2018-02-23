@@ -43,7 +43,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/stylus" lang="stylus" scoped>
   .errPage-container {
     width: 800px;
     margin: 100px auto;

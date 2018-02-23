@@ -1,5 +1,5 @@
 /**
- *Created by jiachenpan on 16/11/29.
+ *Created by ecstack.
  * @param {Sting} url
  * @param {Sting} title
  * @param {Number} w

@@ -86,7 +86,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/stylus" lang="stylus" scoped>
 .upload-container {
   .editor-slide-upload {
     margin-bottom: 20px;

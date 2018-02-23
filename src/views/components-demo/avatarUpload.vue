@@ -1,23 +1,23 @@
 <template>
   <div class="components-container">
     <code>This is based on
-      <a class="link-type" href="//github.com/dai-siki/vue-image-crop-upload"> vue-image-crop-upload</a>.
+      <a class="link-type" href="#"> vue-image-crop-upload</a>.
       {{$t('components.imageUploadTips')}}
     </code>
-
+    <!-- 缩略图 -->
     <pan-thumb :image="image"></pan-thumb>
-
+    
     <el-button type="primary" icon="upload" style="position: absolute;bottom: 15px;margin-left: 40px;" @click="imagecropperShow=true">Change avatar
     </el-button>
-
+    <!-- 上传图片弹框 -->
     <image-cropper :width="300" :height="300" url="https://httpbin.org/post" @close='close' @crop-upload-success="cropSuccess" langType="en"
       :key="imagecropperKey" v-show="imagecropperShow"></image-cropper>
   </div>
 </template>
 
 <script>
-import ImageCropper from '@/components/ImageCropper'
-import PanThumb from '@/components/PanThumb'
+import ImageCropper from '@/components/ImageCropper' //图片裁剪工具
+import PanThumb from '@/components/PanThumb' //缩略图
 
 export default {
   name: 'avatarUpload-demo',
@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     cropSuccess(resData) {
+      console.log(resData);
       this.imagecropperShow = false
       this.imagecropperKey = this.imagecropperKey + 1
       this.image = resData.files.avatar

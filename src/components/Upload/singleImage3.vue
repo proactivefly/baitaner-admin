@@ -73,8 +73,8 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-@import "src/styles/mixin.scss";
+<style rel="stylesheet/stylus" lang="stylus" scoped>
+@import "../../styles/mixin.styl";
 .upload-container {
 	width: 100%;
 	position: relative;

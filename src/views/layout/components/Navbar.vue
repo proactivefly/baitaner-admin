@@ -75,7 +75,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/stylus" lang="stylus" scoped>
 .navbar {
   height: 50px;
   line-height: 50px;

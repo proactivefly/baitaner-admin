@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/stylus" lang="stylus" scoped>
 .icons-container {
   margin: 10px 20px 0;
   overflow: hidden;

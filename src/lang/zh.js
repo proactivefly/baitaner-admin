@@ -1,21 +1,16 @@
 export default {
   route: {
     dashboard: '首页',
+    system:'系统管理',
     introduction: '简述',
     documentation: '文档',
-    permission: '权限测试页',
+    permission: '系统管理',
     icons: '图标',
     components: '组件',
     componentIndex: '介绍',
-    tinymce: '富文本编辑器',
-    markdown: 'Markdown',
-    jsonEditor: 'JSON编辑器',
-    dndList: '列表拖拽',
-    splitPane: 'Splitpane',
     avatarUpload: '头像上传',
     dropzone: 'Dropzone',
     sticky: 'Sticky',
-    countTo: 'CountTo',
     componentMixin: '小组件',
     backToTop: '返回顶部',
     charts: '图表',
@@ -30,7 +25,8 @@ export default {
     selectExcel: 'Export Selected',
     uploadExcel: 'Upload Excel',
     clipboardDemo: 'Clipboard',
-    i18n: '国际化'
+    i18n: '国际化',
+    authManagement:'权限管理',
   },
   navbar: {
     logOut: '退出登录',
@@ -44,7 +40,9 @@ export default {
     logIn: '登录',
     username: '账号',
     password: '密码',
-    switchLang:'切换语言成功'
+    switchLang:'切换语言成功',
+    usernameTip:'用户名不能为空',
+    passwordTip:'请输入密码'
   },
   permission: {
     roles: '你的权限',
@@ -52,8 +50,6 @@ export default {
   },
   components: {
     documentation: '文档',
-    tinymceTips: '富文本是管理后台一个核心的功能，但同时又是一个有很多坑的地方。在选择富文本的过程中我也走了不少的弯路，市面上常见的富文本都基本用过了，最终权衡了一下选择了Tinymce。更详细的富文本比较和介绍见',
-    dropzoneTips: '由于我司业务有特殊需求，而且要传七牛 所以没用第三方，选择了自己封装。代码非常的简单，具体代码你可以在这里看到 @/components/Dropzone',
     stickyTips: '当页面滚动到预设的位置会吸附在顶部',
     backToTopTips1: '页面滚动到指定位置会在右下角出现返回顶部按钮',
     backToTopTips2: '可自定义按钮的样式、show/hide、出现的高度、返回的位置 如需文字提示，可在外部使用Element的el-tooltip元素',

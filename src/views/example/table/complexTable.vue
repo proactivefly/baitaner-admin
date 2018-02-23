@@ -1,89 +1,104 @@
 <template>
   <div class="app-container calendar-list-container">
+    <!-- 筛选条件 -->
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" :placeholder="$t('table.title')" v-model="listQuery.title">
       </el-input>
+      <!-- 如果 Select 的绑定值为对象类型，请务必指定 :key 作为它的唯一性标识。 -->
       <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance" :placeholder="$t('table.importance')">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
-        </el-option>
+        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item"></el-option>
       </el-select>
+
       <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type" :placeholder="$t('table.type')">
-        <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">
-        </el-option>
+        <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key"></el-option>
       </el-select>
+      
       <el-select @change='handleFilter' style="width: 140px" class="filter-item" v-model="listQuery.sort">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
+        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key"></el-option>
       </el-select>
+      
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">{{$t('table.search')}}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('table.add')}}</el-button>
       <el-button class="filter-item" type="primary" :loading="downloadLoading" v-waves icon="el-icon-download" @click="handleDownload">{{$t('table.export')}}</el-button>
+      <el-button class='filter-item' type='primary' icon='el-icon-delete' @click='deleteHandler'>删除</el-button>
       <el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showReviewer">{{$t('table.reviewer')}}</el-checkbox>
     </div>
-
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
-      style="width: 100%">
+    <!-- table   border:纵向边框，fit：列的宽度自适应，height-current-row：高亮显示当前行-->
+    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row style="width: 100%" @select="selectRowFun">
+      <el-table-column type='selection' width='55'></el-table-column>
       <el-table-column align="center" :label="$t('table.id')" width="65">
-        <template slot-scope="scope">
-          <span>{{scope.row.id}}</span>
+        <!-- slot-scope 的值将被用作一个临时变量名，此变量接收从父组件传递过来的 prop 对象： -->
+        <template slot-scope="props">
+          <span>{{props.row.id}}</span>
         </template>
       </el-table-column>
+      
       <el-table-column width="150px" align="center" :label="$t('table.date')">
-        <template slot-scope="scope">
-          <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+        <template slot-scope="props">
+          <span>{{props.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column>
+
       <el-table-column min-width="150px" :label="$t('table.title')">
-        <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>
-          <el-tag>{{scope.row.type | typeFilter}}</el-tag>
+        <template slot-scope="props">
+          <span class="link-type">{{props.row.title}}</span>
+          <el-tag>{{props.row.type | typeFilter}}</el-tag>
         </template>
       </el-table-column>
+
       <el-table-column width="110px" align="center" :label="$t('table.author')">
-        <template slot-scope="scope">
-          <span>{{scope.row.author}}</span>
+        <template slot-scope="props">
+          <span>{{props.row.author}}</span>
         </template>
       </el-table-column>
+
       <el-table-column width="110px" v-if='showReviewer' align="center" :label="$t('table.reviewer')">
-        <template slot-scope="scope">
-          <span style='color:red;'>{{scope.row.reviewer}}</span>
+        <template slot-scope="props">
+          <span style='color:red;'>{{props.row.reviewer}}</span>
         </template>
       </el-table-column>
+
       <el-table-column width="80px" :label="$t('table.importance')">
-        <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" icon-class="star" class="meta-item__icon" :key="n"></svg-icon>
+        <template slot-scope="props">
+          <svg-icon v-for="n in +props.row.importance" icon-class="star" class="meta-item__icon" :key="n"></svg-icon>
         </template>
       </el-table-column>
+
       <el-table-column align="center" :label="$t('table.readings')" width="95">
-        <template slot-scope="scope">
-          <span v-if="scope.row.pageviews" class="link-type" @click='handleFetchPv(scope.row.pageviews)'>{{scope.row.pageviews}}</span>
+        <template slot-scope="props">
+          <!-- 如果有值，填值 -->
+          <span v-if="props.row.pageviews" class="link-type" @click='handleFetchPv(props.row.pageviews)'>{{props.row.pageviews}}</span>
+          <!-- 没有就0 -->
           <span v-else>0</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" :label="$t('table.status')" width="100">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="$t('table.actions')" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{$t('table.edit')}}</el-button>
-          <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleModifyStatus(scope.row,'published')">{{$t('table.publish')}}
-          </el-button>
-          <el-button v-if="scope.row.status!='draft'" size="mini" @click="handleModifyStatus(scope.row,'draft')">{{$t('table.draft')}}
-          </el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">{{$t('table.delete')}}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
 
+      <el-table-column class-name="status-col" :label="$t('table.status')" width="100">
+        <template slot-scope="props">
+          <el-tag :type="props.row.status | statusFilter">{{props.row.status}}</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" :label="$t('table.actions')" width="230" class-name="small-padding fixed-width">
+        <template slot-scope="props">
+          <el-button type="primary" size="mini" @click="handleUpdate(props.row)">{{$t('table.edit')}}</el-button>
+          <el-button v-if="props.row.status!='published'" size="mini" type="success" @click="handleModifyStatus(props.row,'published')">{{$t('table.publish')}}
+          </el-button>
+          <el-button v-if="props.row.status!='draft'" size="mini" @click="handleModifyStatus(props.row,'draft')">{{$t('table.draft')}}
+          </el-button>
+          <el-button v-if="props.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(props.row,'deleted')">{{$t('table.delete')}}
+          </el-button>
+        </template>
+      </el-table-column>
+
+    </el-table>
+    <!-- 页码 -->
     <div class="pagination-container">
-      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
         :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
-
+    <!--新建编辑dialog  modal-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
         <el-form-item :label="$t('table.type')" prop="type">
@@ -115,11 +130,13 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
+        <!-- 创建时保存的 按钮 -->
         <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{$t('table.confirm')}}</el-button>
+        <!-- 编辑时的按钮 -->
         <el-button v-else type="primary" @click="updateData">{{$t('table.confirm')}}</el-button>
       </div>
     </el-dialog>
-
+    <!-- 阅读数据模态框 -->
     <el-dialog title="Reading statistics" :visible.sync="dialogPvVisible">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="Channel"> </el-table-column>
@@ -135,7 +152,7 @@
 
 <script>
 import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
-import waves from '@/directive/waves' // 水波纹指令
+import waves from '@/directive/waves'
 import { parseTime } from '@/utils'
 
 const calendarTypeOptions = [
@@ -145,7 +162,7 @@ const calendarTypeOptions = [
   { key: 'EU', display_name: 'Eurozone' }
 ]
 
-// arr to obj ,such as { CN : "China", US : "USA" }
+// arr -> obj { CN : "China", US : "USA" }
 const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
   acc[cur.key] = cur.display_name
   return acc
@@ -162,10 +179,10 @@ export default {
       list: null,
       total: null,
       listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
+      listQuery: { //查询条件
+        page: 1,//页码
+        limit: 20,//每页几条
+        importance: undefined,//重要程度
         title: undefined,
         type: undefined,
         sort: '+id'
@@ -184,8 +201,8 @@ export default {
         type: '',
         status: 'published'
       },
-      dialogFormVisible: false,
-      dialogStatus: '',
+      dialogFormVisible: false, //默认隐藏
+      dialogStatus: '',//表格打开时类型  新建 or 编辑
       textMap: {
         update: 'Edit',
         create: 'Create'
@@ -197,11 +214,12 @@ export default {
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      selectRow:[]
     }
   },
   filters: {
-    statusFilter(status) {
+    statusFilter(status) { //状态过滤
       const statusMap = {
         published: 'success',
         draft: 'info',
@@ -209,14 +227,16 @@ export default {
       }
       return statusMap[status]
     },
-    typeFilter(type) {
+    typeFilter(type) { //过滤类型
       return calendarTypeKeyValue[type]
     }
   },
   created() {
+    // 组件加载请求数据
     this.getList()
   },
   methods: {
+    //获取数据列表
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
@@ -226,17 +246,17 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.page = 1 //重置页码为1
       this.getList()
     },
-    handleSizeChange(val) {
+    handleSizeChange(val) { //改变显示条数时
       if (this.listQuery.limit === val) {
         return
       }
       this.listQuery.limit = val
       this.getList()
     },
-    handleCurrentChange(val) {
+    handleCurrentChange(val) { //会掉参数为当前页（自动注入）
       if (this.listQuery.page === val) {
         return
       }
@@ -250,10 +270,10 @@ export default {
       })
       row.status = status
     },
-    resetTemp() {
+    resetTemp() { //重置表单内容
       this.temp = {
-        id: undefined,
-        importance: 1,
+        id: undefined, 
+        importance: 1, 
         remark: '',
         timestamp: new Date(),
         title: '',
@@ -261,22 +281,22 @@ export default {
         type: ''
       }
     },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
+    handleCreate() { //新增 按钮
+      this.resetTemp() 
+      this.dialogStatus = 'create' //新建
       this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+      this.$nextTick(() => { //dom更新之后
+        this.$refs['dataForm'].clearValidate() //clearValidate() 移除整个表单的校验结果
       })
     },
-    createData() {
+    createData() { //保存数据
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
           this.temp.author = 'vue-element-admin'
           createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
+            this.list.unshift(this.temp) //前边追加
+            this.dialogFormVisible = false 
             this.$notify({
               title: '成功',
               message: '创建成功',
@@ -287,16 +307,40 @@ export default {
         }
       })
     },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
+    handleUpdate(row) { //编辑按钮
+      this.temp = Object.assign({}, row) // 复制 row对象
+      this.temp.timestamp = new Date(this.temp.timestamp)//更新时间
+      this.dialogStatus = 'update' 
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    updateData() {
+    deleteHandler(){//删除选中行
+      if(this.selectRow){
+        this.selectRow.forEach(row=>{
+          let _index = this.list.indexOf(row)
+          this.list.splice(_index, 1)
+        })
+      }
+      this.$notify({
+        title: '成功',
+        message: '删除成功',
+        type: 'success',
+        duration: 2000
+      })
+    },
+    /**
+     * [selectRowFun 赋值]
+     * @param  {[type]} selection [所选行集合]
+     * @param  {[type]} row       [此次选择的行]
+     * @return {[type]}           [description]
+     */
+    selectRowFun(selection,row){
+      // console.log(selection)
+      this.selectRow=selection
+    },
+    updateData() { //编辑状态 时的按钮
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
@@ -320,7 +364,7 @@ export default {
         }
       })
     },
-    handleDelete(row) {
+    handleDelete(row) { //单独删除某条数据
       this.$notify({
         title: '成功',
         message: '删除成功',
@@ -330,23 +374,24 @@ export default {
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)
     },
-    handleFetchPv(pv) {
+    handleFetchPv(pv) { //查看阅览数
       fetchPv(pv).then(response => {
         this.pvData = response.data.pvData
         this.dialogPvVisible = true
       })
     },
-    handleDownload() {
+    handleDownload() { //导出数据
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel(tHeader, data, 'table-list')
+        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status'] //设置表头名称
+        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status'] //选择要导出的数据
+        const data = this.formatJson(filterVal, this.list) //过滤数据
+        // 数据导出
+        excel.export_json_to_excel(tHeader, data, 'table-list') // 文件名
         this.downloadLoading = false
       })
     },
-    formatJson(filterVal, jsonData) {
+    formatJson(filterVal, jsonData) { //过滤数据
       return jsonData.map(v => filterVal.map(j => {
         if (j === 'timestamp') {
           return parseTime(v[j])
