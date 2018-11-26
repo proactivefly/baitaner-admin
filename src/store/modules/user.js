@@ -99,7 +99,7 @@ const user = {
     // 前端 登出
     FedLogOut({ commit }) {
       return new Promise(resolve => {
-        commit('SET_TOKEN', '')
+        commit('SET_TOKEN', '') // 对比react-redux ，react是获取初始state后，单独给token赋空值，然后返回新的state对象
         removeToken()
         resolve()
       })
