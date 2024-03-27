@@ -1,0 +1,24 @@
+{
+    "i18n-ally.localesPaths": [
+        "src/locale",
+        "src/components/message-box/locale",
+        "src/views/login/locale",
+        "src/views/datacenter/dictionary/locale",
+        "src/views/datacenter/logininfo/locale",
+        "src/views/exception/403/locale",
+        "src/views/dashboard/workplace/locale",
+        "src/views/exception/404/locale",
+        "src/views/exception/500/locale",
+        "src/views/dashboard/monitor/locale",
+        "src/views/matter/attachment/locale",
+        "src/views/result/error/locale",
+        "src/views/result/success/locale",
+        "src/views/matter/picture/locale",
+        "src/views/system/account/locale",
+        "src/views/system/role/locale",
+        "src/views/system/rule/locale",
+        "src/views/system/dept/locale",
+        "src/views/user/info/locale",
+        "src/views/user/setting/locale"
+    ]
+}
