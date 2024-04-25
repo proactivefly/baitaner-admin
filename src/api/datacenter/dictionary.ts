@@ -1,6 +1,7 @@
 import { defHttp } from '@/utils/http';
 enum Api {
     getList = '/datacenter/dictionary/get_list',
+    getListAll = '/datacenter/dictionary/getListAll',
     getContent= '/datacenter/dictionary/get_content',
     save = '/datacenter/dictionary/save',
     upStatus = '/datacenter/dictionary/upStatus',
@@ -11,6 +12,11 @@ enum Api {
 export function getList(params: object) {
   return defHttp.get({ url: Api.getList, params:params }, { errorMessageMode: 'none' });
 }
+
+//列表数据
+export function getListAll(params: object) {
+    return defHttp.get({ url: Api.getListAll, params:params }, { errorMessageMode: 'none' });
+  }
 //获取内容
 export function getContent(params: object) {
   return defHttp.get({ url: Api.getContent, params:params }, { errorMessageMode: 'none' });

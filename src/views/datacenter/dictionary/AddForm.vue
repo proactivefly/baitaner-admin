@@ -64,7 +64,7 @@
             keyvalue: '',
             des: '',
             tablename: "",
-            status: 0,
+            // status: 0, // 0开启，1 禁用
             weigh:1,
         }
       const formData = ref(basedata)
@@ -89,17 +89,16 @@
           const res = await formRef.value?.validate();
           if (!res) {
             setLoading(true);
-            Message.loading({content:"提交中",id:"upStatus"})
             let savedata=cloneDeep(unref(formData))
+            console.log('savedate',savedata)
             await save(savedata);
-            Message.success({content:"提交成功",id:"upStatus"})
             closeModal()
             emit('success');
             setLoading(false);
           }
         } catch (error) {
           setLoading(false);
-          Message.clear("top")
+          // Message.clear("top")
         }
       };
        //监听高度

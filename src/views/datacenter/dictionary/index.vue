@@ -358,7 +358,7 @@
         Message.loading({content:"更新状态中",id:"upStatus"})
        const res= await upStatus({id:record.id,status:record.status, tablename:handleTablename.value});
        if(res){
-         Message.success({content:"更新状态成功",id:"upStatus"})
+        Message.success({content:"更新状态成功",id:"upStatus"})
        }
     }catch (error) {
       Message.clear("top")
@@ -374,6 +374,7 @@
          Message.success({content:"删除成功",id:"upStatus"})
        }
     }catch (error) {
+      // Message.success({content:'删除失败',id:"upStatus"})
       Message.clear("top")
     } 
 }
