@@ -7,7 +7,7 @@
             <a-space>
               <a-input :style="{width:'220px'}"  v-model="formModel.name" placeholder="名称" allow-clear />
               <DICTSELECT v-model="formModel.type_id" tableName="common_dictionary_stall_type" style="width:120px"/>
-              <a-select v-model="formModel.status"  :options="statusOptions" placeholder="状态" :style="{width:'120px'}" />
+              <a-select v-model="formModel.status"  :options="statusOptions" placeholder="状态" :style="{width:'120px'}" :allowClear="true"/>
               <a-button type="primary" @click="search">
                 <template #icon>
                   <icon-search />
@@ -15,7 +15,7 @@
                 查询
               </a-button>
               <a-button @click="reset">
-                {{ $t('searchTable.form.reset') }}
+                重置
               </a-button>
             </a-space>
           </a-col>
@@ -63,11 +63,10 @@
           <template #logo="{ record }">
             <img style="height: 50px;border-radius: 5px;" :src="record.logo"/>
           </template>
-          <template #overtime="{ record }">
-            {{record.overtime==0?"不限":record.overtime}}
-          </template>
-          <template #filesize="{ record }">
-            {{filesizeFont(record.filesize)}}
+          <template #status="{record}">
+            <a-tag color="#86909c" v-if="record.status==='closed'"> {{ record.statusStr }}</a-tag>
+            <a-tag color="#f53f3f" v-else-if="record.status==='pending'">{{ record.statusStr }}</a-tag>
+            <a-tag color="#2db7f5" v-else>{{ record.statusStr }}</a-tag>
           </template>
           <template #operations="{ record }">
             <a-space>
@@ -75,8 +74,10 @@
                 <a-button @click="lookDetail(record)">详情</a-button>
               </ButtonGroup>
               <ButtonGroup size="mini">
-                <a-popconfirm content="您确定要删除附件吗?" @ok="handleDelete(record.id)">
-                  <a-button style="color: red;">删除</a-button>
+                <a-popconfirm content="您确定要操作店铺吗?" @ok="handleUpdateStatus(record)">
+                  <a-button :status="['closed','open'].includes(record.status)?'warning':'success'">
+                    {{['closed','open'].includes(record.status)?'封店':'解封'}}
+                  </a-button>
                 </a-popconfirm>
               </ButtonGroup>
             </a-space>
@@ -98,7 +99,7 @@
     import type { SelectOptionData } from '@arco-design/web-vue/es/select/interface';
     import cloneDeep from 'lodash/cloneDeep';
     import { columns,statusEnum} from './data';
-    import { getList ,delStall } from '@/api/stall';
+    import { getList ,delStall,updateStatus } from '@/api/stall';
     import { useI18n } from 'vue-i18n';
     import { useModal } from '@/components/Modal';
     import { Message ,Button} from '@arco-design/web-vue';
@@ -210,17 +211,34 @@
     }
     const handleDelete=async(disdata:any)=>{
       try {
-          Message.loading({content:"删除中",id:"upStatus"})
+          Message.loading({content:"删除中",id:"del"})
          const res= await delStall({id:disdata});
          if(res){
           fetchData();
-           Message.success({content:"删除成功",id:"upStatus"})
+           Message.success({content:"删除成功",id:"del"})
          }
       }catch (error) {
         Message.clear("top")
       } 
     }
-
+    const handleUpdateStatus=async (record:any)=>{
+      try {
+          Message.loading({content:"更新中",id:"upStatus"})
+          let status;
+          if(record.status==="open" || record.status==="closed"){
+            status='pending'
+          }else{
+            status='closed'
+          }
+         const res= await updateStatus({id:record.id,status:status});
+         if(res){
+          fetchData();
+           Message.success({content:"更新成功",id:"upStatus"})
+         }
+      }catch (error) {
+        Message.clear("top")
+      } 
+    }
     const lookDetail=async (record:any)=>{
       const arr=[
         {label:'摊位名称',value:record.name},
@@ -242,13 +260,13 @@
         value: 'open',
       },
       {
-        label: "准备中",
-        value: "pending",
-      },
-      {
         label: "打烊",
         value:"closed",
       },
+      {
+        label: "整改中",
+        value: "pending",
+      }
     ]);
     //存储单位换算
     const suffix = ['B', 'KB', 'MB', 'GB', 'TB'];

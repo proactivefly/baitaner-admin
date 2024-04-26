@@ -30,7 +30,8 @@ export const columns = computed<TableColumnData[]>(() => [
   },
   {
     title: '营业状态',
-    dataIndex: 'statusStr',
+    dataIndex: 'status',
+    slotName: 'status',
     align:"center"
   },
   {
@@ -49,6 +50,6 @@ export const columns = computed<TableColumnData[]>(() => [
 
 export const statusEnum={
   'open':'营业中',
-  'close':'休息中',
-  'pending':'准备中',
+  'closed':'打烊中',
+  'pending':'整改中',
 }

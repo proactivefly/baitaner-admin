@@ -45,12 +45,14 @@
 </script>
 <style scoped>
   :deep(.arco-descriptions-row){
-    margin-top:30px;
     height:40px;
-  }
-  /* :deep(.arco-descriptions-item){
     display:flex;
     align-items: center;
-  } */
+  }
+  :deep(.arco-descriptions-item){
+    display:flex;
+    flex:1;
+    align-items: center;
+  }
 </style>
   
