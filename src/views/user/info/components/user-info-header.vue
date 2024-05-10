@@ -34,9 +34,7 @@
 
 <script lang="ts" setup>
   import { useUserStore } from '@/store';
-
   const userInfo = useUserStore();
-  console.log(userInfo.city)
 </script>
 
 <style scoped lang="less">

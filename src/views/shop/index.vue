@@ -17,6 +17,9 @@
               <a-button @click="reset">
                 重置
               </a-button>
+              <a-button type="primary" @click="jumoB" id="jump">
+                跳到B
+              </a-button>
             </a-space>
           </a-col>
           <a-col
@@ -92,7 +95,7 @@
   </template>
   
   <script lang="ts" setup name="Rule">
-    import { computed, ref, reactive, watch } from 'vue';
+    import { computed, ref, reactive, watch ,onMounted} from 'vue';
     import StallModal from "./components/stallModel.vue";
     import useLoading from '@/hooks/loading';
     import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
@@ -106,6 +109,65 @@
     import { Pagination } from '@/types/global';
     import { useRoute } from 'vue-router'
     import DICTSELECT from "@/components/DictSelect/index.vue";
+
+    //睡眠函数
+    // function clickk(){
+    //   window.focus();
+    //   var element = document.getElementById('jump');
+    //   var clickEvent = new MouseEvent('click', {
+    //         bubbles: true, 
+    //         cancelable: true, 
+    //         view: document.defaultView
+    //     });
+    //   element?.dispatchEvent(clickEvent);
+    //   console.log('click')
+    // }
+    // window.name="PAGEA";
+    // var _name='http://localhost:9420/#/user/info'
+    // const jumoB=()=>{
+    //     // clickk()
+    //     console.log('执行了jumpB-————————————',window.name)
+    //     window.open(_name,"PAGEB")
+    // }
+
+    // // 给id为jump的按钮绑定点击事件
+    
+    // let rid:any=null
+
+    // // setInterval(()=>{
+    // //   const randomNum=Math.floor(Math.random()*10)
+    // //   console.log("randomNum",randomNum)
+    // //   if(randomNum>5){
+    // //     //  jumoB()
+    // //     // 获取jump 按钮的dom
+    // //     const jumpBtn=document.getElementById('jump')
+    // //     if(jumpBtn){
+    // //       jumpBtn.click()
+    // //     }
+    // //   }
+    // // },3000)
+    // onMounted(()=>{
+    //   setTimeout(()=>{
+    //     // jumoB()
+    //     clickk()
+    //   },3000)
+    // })
+    // document.addEventListener('visibilitychange', function () {
+    //   // 用户打开或回到页面
+    //   if (document.visibilityState === 'visible') {
+    //     clearInterval(rid)
+    //     rid=setInterval(()=>{
+    //       const randomNum=Math.floor(Math.random()*10)
+    //       console.log("A页面随机数",randomNum)
+    //       if(randomNum>5){
+    //         // jumoB()
+    //         clickk()
+    //       }
+    //     },3000)
+    //   }else{
+    //     clearInterval(rid)
+    //   }
+    // }) 
     const [registerModal, { openModal }] = useModal();
     const route = useRoute();
     const ButtonGroup=Button.Group
@@ -145,8 +207,7 @@
     const cloneColumns = ref<Column[]>([]);
     const showColumns = ref<Column[]>([]);
     const size = ref<SizeProps>('large');
-     //查询字段
-     const generateFormModel = () => {
+    const generateFormModel = () => {
       return {
         type_id:'',
         name: '',
@@ -276,10 +337,12 @@
       return (size / 2 ** (10 * index)).toFixed(2) + suffix[index];
     }
     function clamp(v:any, min:any, max:any) {
-    if (v < min) return min;
-    if (v > max) return max;
-    return v;
-  }
+      if (v < min) return min;
+      if (v > max) return max;
+      return v;
+    }
+
+    
   </script>
   
   <style scoped lang="less">

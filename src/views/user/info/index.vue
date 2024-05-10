@@ -3,6 +3,7 @@
     <Breadcrumb :items="['menu.user', 'menu.user.info']" />
     <UserInfoHeader />
     <div class="content">
+      <a-button id="jump">返回A</a-button>
       <div class="content-left">
         <a-grid :cols="24" :col-gap="16" :row-gap="16">
           <a-grid-item :span="24">
@@ -33,14 +34,68 @@
   import MyProject from './components/my-project.vue';
   import LatestActivity from './components/latest-activity.vue';
   import MyTeam from './components/my-team.vue';
-</script>
+  // import { onMounted,ref } from 'vue';
+  // let initId:any=ref(null)
+  // let rid:any=ref(null)
+  // onMounted(() => {
+  //     initId=setInterval(()=>{
+  //     const randomNum=Math.floor(Math.random()*10)
+  //     console.log('随机数',randomNum)
+  //     if(randomNum>5){
+  //       // back()
+  //       clickk()
+  //     }
+  //   },3000)
+  // })
+  // function clickk(){
+  //   window.focus();
+  //   var element = document.getElementById('jump');
+  //     var clickEvent = new MouseEvent('click', {
+  //           bubbles: true, 
+  //           cancelable: true, 
+  //           view: document.defaultView
+  //       });
+  //     element?.dispatchEvent(clickEvent);
+  //     console.log('click')
+  //   }
+  // var _url='http://localhost:9420/#/baitaner/index'
+  // window.name="PAGEB";
+  // const back = () => {
+  //   // clickk()
+  //   console.log('回去了——----————————B页面name',window.name)
+  //   window.open("","PAGEA")
+  // }
 
-<script lang="ts">
-  export default {
-    name: 'Info',
-  };
-</script>
 
+  // // rid=setInterval(()=>{
+  // //   const randomNum=Math.floor(Math.random()*10)
+  // //   console.log('随机数',randomNum)
+  // //   if(randomNum>5){
+  // //     // back()
+  // //     const jumpBtn=document.getElementById('jump')
+  // //       if(jumpBtn){
+  // //          jumpBtn.click()
+  // //       }
+  // //   }
+  // // },3000)
+
+  // document.addEventListener('visibilitychange', function () {
+  //   console.log("B页面监听了",document.visibilityState)
+  //   clearInterval(initId)
+  //   if (document.visibilityState === 'visible') {
+  //     rid=setInterval(()=>{
+  //         const randomNum=Math.floor(Math.random()*10)
+  //         console.log("随机数",randomNum)
+  //         if(randomNum>5){
+  //           // back()
+  //           clickk()
+  //         }
+  //       },3000)
+  //   }else{
+  //     clearInterval(rid)
+  //   }
+  // })
+</script>
 <style scoped lang="less">
   .container {
     padding: 0 20px 20px 20px;

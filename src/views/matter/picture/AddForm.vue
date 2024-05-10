@@ -165,7 +165,6 @@
                 //开始手动上传
                 const filename=fileItem?.name||""
                 const resdata = await userUploadApi({ name: 'file', file: fileItem.file as Blob, filename,data:{cid:0}},onUploadProgress);
-                console.log("更新图片:",resdata)
                 //更新图片
                 if(resdata["code"]==0){
                   formData.value.url=resdata["data"].url

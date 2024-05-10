@@ -203,7 +203,6 @@
   //提交修改
   const handlePassword=()=>{
     formRef.value.validate(async(res:any)=>{
-        console.log("提交修改",res)
       if(res==undefined){
         Message.loading({content:"修改密码中",id:"delaction"})
         const resultdata = await changePassword({oldpassword:formpassword.value.oldpassword,password:formpassword.value.password});

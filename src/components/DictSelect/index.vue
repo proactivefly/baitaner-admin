@@ -50,7 +50,6 @@
     dictData.value = items;
   }
   onMounted(()=>{
-    console.log('inM')
     getDictOptions()
   })
   // 将props的value映射到本地的selectedValue上，以实现v-model的双向绑定效果
