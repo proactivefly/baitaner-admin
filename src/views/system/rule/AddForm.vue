@@ -94,7 +94,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="12"  v-if="formData.type!=2">
-          <a-form-item field="hideChildrenInMenu" label="左侧菜单中显示" style="margin-bottom:5px;">
+          <a-form-item field="hideChildrenInMenu" label="强制在左侧菜单中显示单项" style="margin-bottom:5px;">
             <a-radio-group v-model="formData.hideChildrenInMenu" :options="OYoptions" />
           </a-form-item>
         </a-col>

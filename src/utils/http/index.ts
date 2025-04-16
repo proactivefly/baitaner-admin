@@ -45,7 +45,7 @@ const transform: AxiosTransform = {
       throw new Error('请求出错，请稍候重试');
     }
     //  这里 code，data，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { code, data, message,time,token } = resdata;
+    const { code, data, message, time, token } = resdata;
     //如果token即将过去则刷新token
     // 这里逻辑可以根据项目进行修改
     const hasSuccess = resdata && Reflect.has(resdata, 'code') && code === ResultEnum.SUCCESS;
@@ -151,7 +151,7 @@ const transform: AxiosTransform = {
         : token;
     }
     //接口验证
-    const API_SECRET ="gofly@888"; //从config读取的配置-打包后可以修改-变化
+    const API_SECRET ="baitaner"; //从config读取的配置-打包后可以修改-变化
     const timestamp: number = Date.parse(new Date().toString())/1000;
     (config as Recordable).headers["verify-time"]=timestamp as any;
     (config as Recordable).headers["verify-encrypt"]=md5(API_SECRET+timestamp) as any;

@@ -42,7 +42,7 @@
   const emit = defineEmits(['update:value']);
   
   // 处理选中值变化
-  const handleChange = (newValue) => {
+  const handleChange = (newValue:any) => {
     emit('update:value', newValue);
   };
   const getDictOptions = async () => {
