@@ -63,7 +63,7 @@
           {{dayjs(record.createtime*1000).format("YYYY-MM-DD")}}
         </template>
         <template #status="{ record }">
-          <a-switch type="round" v-model="record.status" :checked-value="0" :unchecked-value="1" @change="handleStatus(record)">
+          <a-switch type="round" v-model="record.status" :checked-value="0" :unchecked-value="1" @change="handleStatus(record)" :disabled="record.id===1">
               <template #checked>
                 开
               </template>
@@ -73,11 +73,14 @@
             </a-switch>
         </template>
         <template #operations="{ record }">
-          <Icon icon="svgfont-bianji1" class="iconbtn" @click="handleEdit(record)" :size="18" color="#0960bd"></Icon>
-          <a-divider direction="vertical" />
-          <a-popconfirm content="您确定要删除吗?" @ok="handleDel(record)">
-            <Icon icon="svgfont-icon7" class="iconbtn" :size="18" color="#ed6f6f"></Icon>
-          </a-popconfirm>
+          <div v-if="record.id!==1">
+            <Icon icon="svgfont-bianji1" class="iconbtn" @click="handleEdit(record)" :size="18" color="#0960bd"></Icon>
+            <a-divider direction="vertical" />
+            <a-popconfirm content="您确定要删除吗?" @ok="handleDel(record)">
+             <Icon icon="svgfont-icon7" class="iconbtn" :size="18" color="#ed6f6f"></Icon>
+            </a-popconfirm>
+          </div>
+          
         </template>
       </a-table>
     </a-card>
