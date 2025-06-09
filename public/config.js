@@ -5,7 +5,7 @@ window.globalConfig = {
 	Root_url_dev:`${localhost}/admin`,//Api服务器域名-开发环境
     Upload_url:`${domain}/common`,//Api服务器域名
 	Upload_url_dev:`${localhost}/common`,//Api服务器域名-开发环境
-	AppTitle:"Golang Admin",
+	AppTitle:"系统管理中心",
     AppVersion:"1.1.0",
     Company:"golang集团",
     Address:"中国·北京",

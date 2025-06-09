@@ -3,44 +3,55 @@
     <Breadcrumb :items="['menu.system', 'system.dept']" />
     <a-card class="general-card onelineCard" >
       <a-row style="margin-bottom: 10px">
-        <a-col :span="12">
+          <a-col :span="16">
+            <a-space>
+              <a-input :style="{width:'220px'}"  v-model="formModel.name" placeholder="名称" allow-clear />
+              <a-select v-model="formModel.status"  :options="statusOptions" placeholder="状态" :style="{width:'120px'}" :allowClear="true"/>
+              <a-button type="primary" @click="search">
+                <template #icon>
+                  <icon-search />
+                </template>
+                查询
+              </a-button>
+              <a-button @click="reset">
+                重置
+              </a-button>
+            </a-space>
+          </a-col>
+          <a-col
+            :span="8"
+             style="text-align: right;"
+          >
           <a-space>
-          </a-space>
-        </a-col>
-        <a-col
-          :span="12"
-           style="text-align: right;"
-        >
-        <a-space>
-          <a-button type="primary" @click="createRule">
+            <a-button type="primary" @click="createRule">
             <template #icon>
               <icon-plus />
             </template>
             {{ $t('searchTable.operation.create') }}
           </a-button>
-          <a-tooltip :content="$t('searchTable.actions.refresh')">
-            <div class="action-icon" @click="search"
-              ><icon-refresh size="18"
-            /></div>
-          </a-tooltip>
-          <a-dropdown @select="handleSelectDensity">
-            <a-tooltip :content="$t('searchTable.actions.density')">
-              <div class="action-icon"><icon-line-height size="18" /></div>
+            <a-tooltip :content="$t('searchTable.actions.refresh')">
+              <div class="action-icon" @click="search"
+                ><icon-refresh size="18"
+              /></div>
             </a-tooltip>
-            <template #content>
-              <a-doption
-                v-for="item in densityList"
-                :key="item.value"
-                :value="item.value"
-                :class="{ active: item.value === size }"
-              >
-                <span>{{ item.name }}</span>
-              </a-doption>
-            </template>
-          </a-dropdown>
-          </a-space>
-        </a-col>
-      </a-row>
+            <a-dropdown @select="handleSelectDensity">
+              <a-tooltip :content="$t('searchTable.actions.density')">
+                <div class="action-icon"><icon-line-height size="18" /></div>
+              </a-tooltip>
+              <template #content>
+                <a-doption
+                  v-for="item in densityList"
+                  :key="item.value"
+                  :value="item.value"
+                  :class="{ active: item.value === size }"
+                >
+                  <span>{{ item.name }}</span>
+                </a-doption>
+              </template>
+            </a-dropdown>
+            </a-space>
+          </a-col>
+        </a-row>
       <a-table
          row-key="id"
         :loading="loading"
@@ -59,16 +70,13 @@
         <template #icon="{ record }">
           <Icon :icon="record.icon" :size="20"></Icon>
         </template>
-        <template #createtime="{ record }">
-          {{dayjs(record.createtime*1000).format("YYYY-MM-DD")}}
-        </template>
         <template #status="{ record }">
-          <a-switch type="round" v-model="record.status" :checked-value="0" :unchecked-value="1" @change="handleStatus(record)">
+          <a-switch type="round" v-model="record.status" :checked-value="1" :unchecked-value="0" @change="handleStatus(record)">
               <template #checked>
-                开
+                启用
               </template>
               <template #unchecked>
-                关
+                禁用
               </template>
             </a-switch>
         </template>
@@ -87,14 +95,16 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, watch, nextTick } from 'vue';
+  import { computed, ref, watch, nextTick , reactive} from 'vue';
   import useLoading from '@/hooks/loading';
-  import { getList,upStatus,del} from '@/api/system/dept';
+  import { getList,del,upStatus } from '@/api/beijingEntryPermit';
   import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
   import cloneDeep from 'lodash/cloneDeep';
   import dayjs from 'dayjs';
+  import type { SelectOptionData } from '@arco-design/web-vue/es/select/interface';
+  import { Pagination } from '@/types/global';
   //数据
-  import { columns} from './data';
+  import { columns } from './data';
   //表单
   import AddForm from './AddForm.vue';
   import { useModal } from '/@/components/Modal';
@@ -129,11 +139,48 @@
   const showColumns = ref<Column[]>([]);
   const size = ref<SizeProps>('large');
   const artable=ref()
+    //分页
+  const basePagination: Pagination = {
+    current: 1,
+    pageSize: 10,
+  };
+  const pagination = reactive({
+    ...basePagination,
+    showTotal:true,
+    showPageSize:true,
+  });
+  const generateFormModel = () => {
+    return {
+      name:'',
+      startTime: '',
+      status: '',
+    };
+  };
+  const formModel = ref(generateFormModel());
+
+      //状态
+  const statusOptions = computed<SelectOptionData[]>(() => [
+    {
+      label: "启用",
+      value: '1',
+    },
+    {
+      label: "未启用",
+      value:"0",
+    },
+  ]);
   const fetchData = async () => {
     setLoading(true);
     try {
-      const data= await getList({});
-      renderData.value = data;
+      const {items}= await getList({page:pagination.current,pageSize:pagination.pageSize,...formModel.value});
+      renderData.value = items.map((item:any) => { 
+        return {
+          ...item,
+          statusStr:item.status==1?'启用':'未启用',
+          start_time:dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss'),
+          end_time:dayjs(item.end_time).format('YYYY-MM-DD HH:mm:ss'),
+        }
+      });
       nextTick(()=>{
         artable.value.expandAll()
       })
@@ -143,7 +190,10 @@
       setLoading(false);
     }
   };
-
+    const reset = () => {
+      formModel.value = generateFormModel();
+      fetchData();
+    };
   const search = () => {
     fetchData();
   };
@@ -193,11 +243,9 @@
   //更新状态
   const handleStatus=async(record:any)=>{
     try {
-        Message.loading({content:"更新状态中",id:"upStatus"})
-       const res= await upStatus({id:record.id,status:record.status});
-       if(res){
-         Message.success({content:"更新状态成功",id:"upStatus"})
-       }
+          Message.loading({content:"更新状态中",id:"upStatus"})
+          const res= await upStatus({id:record.id,status:record.status});
+          res && Message.success({content:"更新状态成功",id:"upStatus"})
     }catch (error) {
       Message.clear("top")
     } 
@@ -205,11 +253,12 @@
   //删除数据
   const handleDel=async(record:any)=>{
     try {
-        Message.loading({content:"删除中",id:"upStatus"})
-       const res= await del({ids:[record.id]});
-       if(res){
-        fetchData();
-         Message.success({content:"删除成功",id:"upStatus"})
+        Message.loading({content:"删除中",id:"delete"})
+        const res= await del({ids:[record.id]});
+        console.log(res);
+        if(res){
+          fetchData();
+          Message.success({content:"删除成功",id:"delete"})
        }
     }catch (error) {
       Message.clear("top")
